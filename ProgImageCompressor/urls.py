@@ -1,0 +1,4 @@
+"""ProgImageCompressor URL Configuration"""
+
+urlpatterns = [
+]

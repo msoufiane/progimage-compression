@@ -1,0 +1,18 @@
+language: python
+python:
+- '3.6'
+if: "(type = push AND branch = master) OR (type = pull_request AND NOT branch =~ /no-ci/)"
+env:
+  global:
+  - DJANGO_ENVIRONMENT=test
+  - DJANGO_LOGLEVEL=debug
+  - secure: WA1z8roLEzHcqFkpi0t/6PPtY4BBeVtwBs20KyUDm86O4sNl0TRFndy6bfiupmyxeK7TAjEDdgutQPIyuK7+3FF01j7rph4feRg02winzNSSIqT6wxSJLI6EqQGi+Jc7/X+M2I70BqqtqHZ42djtdWQzXS9SDXloOrlmjUzW4Tv9XtfdzYwuUVgz/6TBrbz94cUOm5K07XcmFOgDWtweOyLFf/VyV9f5fh/BvRotkfxXkn4VsXdnMsqRPSFJszRhuOx6aBMuIUR8snr0y67meyuffaYEtMnRNNbXBRGEYyIiG+ajRlkWdSxWX3j+tM3Wt+oU4OESqewdBAWIES4FT0cKO8J7aj6UphS3s0EBtRdTBcbboqjxVjKa6DBuPxlC3oHsygXVqtZmqLqWhlumtaSIxbPcKSNuMac6Rv+6qkgvlxvtvH75XNcpq5p4wGxRn8Qq2wBpAxeMuRlwN4w4pCoW4uYUZE1QZ/SWxZG+mrO3mNM2yWhH+pvP6y3Ac4HEpA7MGm/fYFm4MfWWeAnVErwLadiVY813617YzLbmYUMh+Zo2jIRNLQyrRhsdrR4F/rhgtD3LPvbuvSj7PBjXDRphSf+In1FE1iQLM9OuTPJjbmSl09PG1ZX8HvlKl+6xuKjmtOboaYAh4TsW2F6437uLVg21Rt02hLC6z5gLFq4=
+install:
+- pip install -r requirements.txt
+before_script:
+- python manage.py migrate
+script:
+- docker build -t fousiaane/progimagecompressor:latest .
+after_script:
+- echo $DOCKER_HUB_PWD | docker login --username fousiaane --password-stdin
+- docker push fousiaane/progimagecompressor:latest
